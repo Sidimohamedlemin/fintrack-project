@@ -24,10 +24,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('users/', include('users.urls')),     # Your custom users app
-    path('finance/', include('finance.urls')), # Your finance app
-    path('accounts/', include('django.contrib.auth.urls')),  # ✅ This is the missing line
-    path('accounts/', include('allauth.urls')),
+    path('accounts/', include('allauth.urls')),   # for login/register
+    path('finance/', include('finance.urls')),    # your main app
+    path('', include('finance.urls')),            # root path goes to finance
 ]
-
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
