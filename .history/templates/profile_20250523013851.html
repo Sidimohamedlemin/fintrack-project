@@ -1,0 +1,13 @@
+{% extends "users/base.html" %}
+
+{% block users_content %}
+<div class="container mt-5">
+  <h2>Welcome, {{ user.username }}!</h2>
+  <p><strong>Email:</strong> {{ user.email }}</p>
+  {% if user.profile.avatar %}
+    <img src="{{ user.profile.avatar.url }}" width="150" height="150" class="rounded">
+  {% endif %}
+  <p><strong>Bio:</strong> {{ user.profile.bio }}</p>
+</div>
+{% endblock %}
+<a href="{% url 'edit_profile' %}" class="btn btn-outline-primary">Edit Profile</a>

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Welcome, {{ user.username }}!</h2>
+    <p>This is your profile page.</p>
+
+    {% if user.profile.avatar %}
+        <img src="{{ user.profile.avatar.url }}" alt="Avatar" width="150" class="rounded-circle mb-3">
+    {% else %}
+        <img src="{% static 'default-avatar.png' %}" alt="Default Avatar" width="150" class="rounded-circle mb-3">
+    {% endif %}
+
+    <ul>
+        <li><strong>Username:</strong> {{ user.username }}</li>
+        <li><strong>Email:</strong> {{ user.email }}</li>
+        <li><strong>Bio:</strong> {{ user.profile.bio }}</li>
+    </ul>
+
+    <a href="{% url 'edit_profile' %}" class="btn btn-primary mt-3">Edit Profile</a>
+</div>
+{% endblock %}

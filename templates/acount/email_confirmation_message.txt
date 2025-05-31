@@ -1,0 +1,9 @@
+Hello {{ user.username }},
+
+Thank you for signing up with FinTrack+! Please confirm your email by clicking the link below:
+
+{{ activate_url }}
+
+If you didn’t request this, you can safely ignore this email.
+
+— FinTrack+ Team

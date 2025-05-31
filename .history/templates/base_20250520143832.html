@@ -1,0 +1,55 @@
+<!-- base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}FinTrack+{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+    }
+    .sidebar {
+      width: 250px;
+      background-color: #343a40;
+      color: white;
+      padding: 1rem;
+    }
+    .sidebar a {
+      color: white;
+      text-decoration: none;
+      display: block;
+      margin: 10px 0;
+    }
+    .sidebar a:hover {
+      text-decoration: underline;
+    }
+    .main {
+      flex-grow: 1;
+      padding: 2rem;
+      background-color: #f8f9fa;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h4>FinTrack+</h4>
+    <a href="{% url 'dashboard' %}">Dashboard</a>
+    <a href="{% url 'add_income' %}">Add Income</a>
+    <a href="{% url 'add_expense' %}">Add Expense</a>
+    <a href="{% url 'add_budget' %}">Set Budget</a>
+    <a href="/users/logout/">Logout</a>
+  </div>
+
+  <div class="main">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>
