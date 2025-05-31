@@ -3,6 +3,7 @@ import os
 import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+ROOT_URLCONF = 'fintrack_project.urls'
 
 # ===================== STATIC & MEDIA =====================
 STATIC_URL = '/static/'
@@ -13,9 +14,9 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 # ===================== SECRET & DEBUG =====================
-SECRET_KEY = os.environ.get('SECRET_KEY', 'fallback-secret-key')
-DEBUG = False
-ALLOWED_HOSTS = ['.onrender.com']
+SECRET_KEY = os.environ.get('SECRET_KEY', 'TEBGALI@49360602')
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+ALLOWED_HOSTS = ['*']
 
 # ===================== DATABASE =====================
 DATABASES = {
