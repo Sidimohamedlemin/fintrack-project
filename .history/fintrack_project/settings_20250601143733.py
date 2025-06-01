@@ -65,9 +65,8 @@ ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
 ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 300
 
 LOGIN_URL = 'account_login'
-LOGIN_REDIRECT_URL = '/finance/dashboard/' 
+LOGIN_REDIRECT_URL = '/finance/dashboard/'  # ✅ Add this line
 LOGOUT_REDIRECT_URL = 'account_login'
-
 # ===================== EMAIL (Gmail SMTP) =====================
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'

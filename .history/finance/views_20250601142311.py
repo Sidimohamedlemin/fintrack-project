@@ -7,17 +7,20 @@ import calendar
 from django.db.models import Sum
 from .models import Income, Expense, Budget
 from .forms import IncomeForm, ExpenseForm, BudgetForm
+
 @login_required
 def dashboard(request):
     month_param = request.GET.get('month')
     type_param = request.GET.get('type')
     now_time = datetime.now()
-
+    return render(request, 'finance/dashboard.html')  
+    # Resolve selected month
     try:
         month_number = list(calendar.month_name).index(month_param) if month_param else now_time.month
     except ValueError:
         month_number = now_time.month
 
+    # Filter incomes and expenses for selected month
     incomes = Income.objects.filter(user=request.user, date__month=month_number)
     expenses = Expense.objects.filter(user=request.user, date__month=month_number)
 
@@ -62,7 +65,6 @@ def dashboard(request):
         'month_list': month_list,
         'monthly_data': monthly_data,
     }
-
     return render(request, 'finance/dashboard.html', context)
 
 

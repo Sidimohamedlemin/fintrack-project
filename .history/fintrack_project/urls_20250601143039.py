@@ -11,7 +11,6 @@ urlpatterns = [
     path('users/', include('users.urls')),  # ✅ add this line
     path('', dashboard, name='home'),
 ]
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 # Serve media files during development
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
