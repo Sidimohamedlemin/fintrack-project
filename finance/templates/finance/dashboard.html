@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+
 {% block content %}
 <h2>Overview</h2>
 
@@ -32,7 +33,7 @@
 <!-- Charts -->
 <div class="row">
     <div class="col-md-6">
-        <canvas id="expenseChart"></canvas>
+        <canvas id="categoryChart" width="400" height="300"></canvas>
     </div>
     <div class="col-md-6">
         <canvas id="incomeExpenseChart" height="200"></canvas>
@@ -103,22 +104,20 @@
         {% endfor %}
     </tbody>
 </table>
-<!-- Existing content above like cards and canvas -->
 
-<h5 class="mt-4 text-white">Expenses by Category</h5>
-<canvas id="categoryChart" width="400" height="300"></canvas>
-
-<!-- ✅ Insert Chart.js script here -->
+<!-- Chart.js Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
 document.addEventListener("DOMContentLoaded", function () {
+    // Category Pie Chart
     const selectedMonth = "{{ request.GET.month|default:now|date:'F' }}";
-    fetch(`/finance/chart_data?month=${selectedMonth}`)
+    fetch(/finance/chart_data?month=${selectedMonth})
         .then(response => response.json())
         .then(data => {
             const labels = Object.keys(data);
             const values = Object.values(data);
-            const backgroundColors = labels.map((_, i) => `hsl(${i * 60}, 70%, 60%)`);
+            const backgroundColors = labels.map((_, i) => hsl(${i * 60}, 70%, 60%));
 
             const ctx = document.getElementById('categoryChart').getContext('2d');
             new Chart(ctx, {
@@ -141,53 +140,44 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
         });
-});
-</script>
 
-</body>
-</html>
+    // Monthly Income vs Expense Bar Chart
+    const monthlyData = {{ monthly_data|safe }};
+    const labels = monthlyData.map(item => item.month);
+    const incomeData = monthlyData.map(item => item.income);
+    const expenseData = monthlyData.map(item => item.expense);
 
-// Bar Chart for Monthly Income vs Expense
-const monthlyData = {{ monthly_data|safe }};
-const labels = monthlyData.map(item => item.month);
-const incomeData = monthlyData.map(item => item.income);
-const expenseData = monthlyData.map(item => item.expense);
-
-const ctx = document.getElementById('incomeExpenseChart').getContext('2d');
-new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: labels,
-        datasets: [
-            {
-                label: 'Income',
-                data: incomeData,
-                backgroundColor: 'rgba(54, 162, 235, 0.7)'
-            },
-            {
-                label: 'Expense',
-                data: expenseData,
-                backgroundColor: 'rgba(255, 99, 132, 0.7)'
-            }
-        ]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top'
-            },
-            title: {
-                display: true,
-                text: 'Monthly Income vs Expense'
+    const ctxBar = document.getElementById('incomeExpenseChart').getContext('2d');
+    new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Income',
+                    data: incomeData,
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)'
+                },
+                {
+                    label: 'Expense',
+                    data: expenseData,
+                    backgroundColor: 'rgba(255, 99, 132, 0.7)'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top'
+                },
+                title: {
+                    display: true,
+                    text: 'Monthly Income vs Expense'
+                }
             }
         }
-    }
+    });
 });
 </script>
 {% endblock %}
-"""
-
-path = Path("finance/templates/finance/dashboard.html")
-path.parent.mkdir(parents=True, exist_ok=True)
-path.write_text(dashboard_html, encoding="utf-8")
