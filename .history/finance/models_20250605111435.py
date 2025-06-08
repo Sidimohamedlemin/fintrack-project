@@ -33,10 +33,9 @@ class Transaction(models.Model):
         ('Income', 'Income'),
         ('Expense', 'Expense'),
     ]
-
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     type = models.CharField(max_length=10, choices=TYPE_CHOICES)
-    label = models.CharField("Source / Category", max_length=100)
+    category = models.CharField(max_length=100)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateField()
 

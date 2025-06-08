@@ -200,9 +200,3 @@ def delete_expense(request, pk):
         'expense': expense
     })
 
-@login_required
-def unified_transactions(request):
-    transactions = Transaction.objects.filter(user=request.user).order_by('-date')
-    return render(request, 'finance/unified.html', {
-        'transactions': transactions
-    })

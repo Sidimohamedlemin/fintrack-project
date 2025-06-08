@@ -5,70 +5,13 @@ from django.contrib import messages
 from datetime import datetime
 import calendar
 from django.db.models import Sum
-from .models import Income, Expense, Budget, Transaction
+from .models import Income, Expense, Budget
 from .forms import IncomeForm, ExpenseForm, BudgetForm
-
-
 @login_required
-def dashboard(request):
-    month_param = request.GET.get('month')
-    type_param = request.GET.get('type')
-    now_time = datetime.now()
-
-    try:
-        month_number = list(calendar.month_name).index(month_param) if month_param else now_time.month
-    except ValueError:
-        month_number = now_time.month
-
-    incomes = Income.objects.filter(user=request.user, date__month=month_number)
-    expenses = Expense.objects.filter(user=request.user, date__month=month_number)
-
-    if type_param == 'income':
-        expenses = []
-    elif type_param == 'expense':
-        incomes = []
-
-    total_income = sum(i.amount for i in incomes)
-    total_expense = sum(e.amount for e in expenses)
-    balance = total_income - total_expense
-
-    current_month_name = calendar.month_name[month_number]
-    budget = Budget.objects.filter(user=request.user, month=current_month_name).first()
-
-    percent_used = None
-    if budget and budget.limit:
-        percent_used = (total_expense / budget.limit) * 100
-        if total_expense > budget.limit:
-            messages.warning(request, f"⚠️ You have exceeded your budget for {current_month_name}!")
-
-    month_list = list(calendar.month_name)[1:]
-    monthly_data = []
-
-    for i in range(1, 13):
-        income_sum = Income.objects.filter(user=request.user, date__month=i).aggregate(total=Sum('amount'))['total'] or 0
-        expense_sum = Expense.objects.filter(user=request.user, date__month=i).aggregate(total=Sum('amount'))['total'] or 0
-        monthly_data.append({
-            'month': calendar.month_abbr[i],
-            'income': float(income_sum),
-            'expense': float(expense_sum),
-        })
-
-    context = {
-        'incomes': incomes,
-        'expenses': expenses,
-        'total_income': total_income,
-        'total_expense': total_expense,
-        'balance': balance,
-        'budget': budget,
-        'percent_used': percent_used,
-        'month_list': month_list,
-        'monthly_data': monthly_data,
-        'now' : datetime.now()
-    }
-
-    return render(request, 'finance/dashboard.html', context)
-
-
+from django.shortcuts import render
+from .models import Transaction, Budget
+from datetime import datetime
+import calendar
 
 def dashboard_view(request):
     month_str = request.GET.get('month', datetime.now().strftime('%B'))
@@ -101,6 +44,7 @@ def dashboard_view(request):
     }
 
     return render(request, 'finance/dashboard.html', context)
+
 
 @login_required
 def add_income(request):
@@ -200,9 +144,3 @@ def delete_expense(request, pk):
         'expense': expense
     })
 
-@login_required
-def unified_transactions(request):
-    transactions = Transaction.objects.filter(user=request.user).order_by('-date')
-    return render(request, 'finance/unified.html', {
-        'transactions': transactions
-    })

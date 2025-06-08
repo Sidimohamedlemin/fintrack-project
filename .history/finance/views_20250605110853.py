@@ -5,10 +5,8 @@ from django.contrib import messages
 from datetime import datetime
 import calendar
 from django.db.models import Sum
-from .models import Income, Expense, Budget, Transaction
+from .models import Income, Expense, Budget
 from .forms import IncomeForm, ExpenseForm, BudgetForm
-
-
 @login_required
 def dashboard(request):
     month_param = request.GET.get('month')
@@ -68,7 +66,10 @@ def dashboard(request):
 
     return render(request, 'finance/dashboard.html', context)
 
-
+from django.shortcuts import render
+from .models import Transaction, Budget
+from datetime import datetime
+import calendar
 
 def dashboard_view(request):
     month_str = request.GET.get('month', datetime.now().strftime('%B'))
@@ -200,9 +201,3 @@ def delete_expense(request, pk):
         'expense': expense
     })
 
-@login_required
-def unified_transactions(request):
-    transactions = Transaction.objects.filter(user=request.user).order_by('-date')
-    return render(request, 'finance/unified.html', {
-        'transactions': transactions
-    })

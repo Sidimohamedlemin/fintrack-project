@@ -129,4 +129,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 CSRF_TRUSTED_ORIGINS = ['https://fintrack-project.onrender.com']
-'django.middleware.csrf.CsrfViewMiddleware',

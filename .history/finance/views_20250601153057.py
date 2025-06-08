@@ -5,10 +5,8 @@ from django.contrib import messages
 from datetime import datetime
 import calendar
 from django.db.models import Sum
-from .models import Income, Expense, Budget, Transaction
+from .models import Income, Expense, Budget
 from .forms import IncomeForm, ExpenseForm, BudgetForm
-
-
 @login_required
 def dashboard(request):
     month_param = request.GET.get('month')
@@ -63,44 +61,10 @@ def dashboard(request):
         'percent_used': percent_used,
         'month_list': month_list,
         'monthly_data': monthly_data,
-        'now' : datetime.now()
     }
 
     return render(request, 'finance/dashboard.html', context)
 
-
-
-def dashboard_view(request):
-    month_str = request.GET.get('month', datetime.now().strftime('%B'))
-    month_number = list(calendar.month_name).index(month_str)
-    transaction_type = request.GET.get('type', 'All')
-
-    transactions = Transaction.objects.filter(date__month=month_number)
-
-    if transaction_type != 'All':
-        transactions = transactions.filter(type=transaction_type)
-
-    total_income = sum(t.amount for t in transactions if t.type == 'Income')
-    total_expense = sum(t.amount for t in transactions if t.type == 'Expense')
-
-    try:
-        budget = Budget.objects.latest('created_at')  # or filter by user if needed
-        budget_left = budget.limit - total_expense
-    except Budget.DoesNotExist:
-        budget = None
-        budget_left = None
-
-    context = {
-        'transactions': transactions,
-        'total_income': total_income,
-        'total_expense': total_expense,
-        'budget': budget,
-        'budget_left': budget_left,
-        'selected_month': month_str,
-        'selected_type': transaction_type,
-    }
-
-    return render(request, 'finance/dashboard.html', context)
 
 @login_required
 def add_income(request):
@@ -200,9 +164,3 @@ def delete_expense(request, pk):
         'expense': expense
     })
 
-@login_required
-def unified_transactions(request):
-    transactions = Transaction.objects.filter(user=request.user).order_by('-date')
-    return render(request, 'finance/unified.html', {
-        'transactions': transactions
-    })

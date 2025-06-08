@@ -1,0 +1,22 @@
+{% extends "base_auth.html" %}
+{% load i18n %}
+
+{% block title %}Email Confirmation - FinTrack+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="card shadow p-4 mx-auto" style="max-width: 600px;">
+        <h3 class="text-center mb-3">{% trans "Verify Your Email Address" %}</h3>
+        <p class="text-muted">
+            {% blocktrans %}
+            We have sent a confirmation email to your inbox. Please click the link in that email to complete your registration.
+            If you don't see it, check your spam folder. Contact us if the problem persists.
+            {% endblocktrans %}
+        </p>
+        <div class="text-center mt-4">
+            <a href="{% url 'account_login' %}" class="btn btn-primary me-2">Go to Login</a>
+            <a href="{% url 'account_signup' %}" class="btn btn-secondary">Sign Up Again</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
