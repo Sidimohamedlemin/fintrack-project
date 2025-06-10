@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="container mt-5">
+    <div class="card p-4 shadow" style="max-width: 500px; margin: auto;">
+      <h3 class="mb-3 text-center">Email Confirmation</h3>
+      {% if confirmation %}
+        <p class="text-center">Thank you {{ confirmation.email_address.user.username }}, your email has been confirmed!</p>
+      {% else %}
+        <p class="text-danger text-center">Invalid or expired confirmation link.</p>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
