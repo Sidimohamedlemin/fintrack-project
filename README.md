@@ -1,8 +1,7 @@
 ECHO is on.
 # 💰 FinTrack+ – Personal Finance Tracker
 
-FinTrack+ is a full-stack web application built with Django that empowers users to efficiently track and manage their personal finances. It offers features like income and expense tracking, budget monitoring, visual charts, and user authentication with email confirmation.
-
+The FinTrack+ project is a comprehensive personal finance management web application developed using Django, a high-level Python web framework. The primary objective of this project is to provide users with an intuitive platform to track their income, monitor expenses, manage monthly budgets, and visualize financial trends through interactive charts and summaries. It empowers individuals to gain insights into their financial behavior and make informed decisions.
 ---
 
 ## 🚀 Project Features
