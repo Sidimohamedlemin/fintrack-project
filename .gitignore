@@ -1,0 +1,27 @@
+SECRET_KEY=your-secret-key 
+# Python
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+
+# Environment
+.env
+venv/
+ENV/
+env/
+
+# Django
+*.sqlite3
+db.sqlite3
+
+# VS Code
+.vscode/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Static and media (optional if you generate them on production)
+staticfiles/
+media/
