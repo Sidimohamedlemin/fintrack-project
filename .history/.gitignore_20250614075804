@@ -1,0 +1,2 @@
+SECRET_KEY=your-secret-key 
+from dotenv import load_dotenv

@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<h2>Overview</h2>
+
+<!-- Messages -->
+{% if messages %}
+  <div class="container mt-3">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<!-- Summary Cards -->
+<div class="row mb-4">
+  <div class="col-md-4">
+    <div class="card text-center p-3">
+      <h6>Total Income</h6>
+      <h4 class="text-success">${{ total_income|floatformat:2 }}</h4>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-center p-3">
+      <h6>Total Expenses</h6>
+      <h4 class="text-danger">${{ total_expense|floatformat:2 }}</h4>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-center p-3">
+      <h6>Budget Left</h6>
+      {% if budget %}
+        <h4 class="text-primary">${{ budget.limit|floatformat:2|add:"-" }}{{ total_expense|floatformat:2 }}</h4>
+      {% else %}
+        <h4 class="text-primary">No budget set</h4>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Export Buttons -->
+<div class="mb-4 text-end">
+  <a href="{% url 'export_pdf' %}?month={{ request.GET.month|default:now|date:'F' }}" class="btn btn-outline-danger me-2">
+    <i class="bi bi-file-earmark-pdf-fill"></i> Export PDF
+  </a>
+  <a href="{% url 'export_csv' %}?month={{ request.GET.month|default:now|date:'F' }}" class="btn btn-outline-success">
+    <i class="bi bi-file-earmark-excel-fill"></i> Export CSV
+  </a>
+</div>
+
+<!-- Charts -->
+<div class="row">
+  <div class="col-md-6 mb-3">
+    <canvas id="categoryChart" height="300"></canvas>
+  </div>
+  <div class="col-md-6 mb-3">
+    <canvas id="incomeExpenseChart" height="300"></canvas>
+  </div>
+</div>
+
+<!-- Filter Form -->
+<form method="get" class="form-inline mb-3">
+  <div class="row g-2 align-items-center">
+    <div class="col-auto">
+      <label for="month">Month:</label>
+      <select name="month" class="form-select">
+        {% for month in month_list %}
+          <option value="{{ month }}" {% if request.GET.month == month %}selected{% endif %}>{{ month }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-auto">
+      <label for="type">Type:</label>
+      <select name="type" class="form-select">
+        <option value="">All</option>
+        <option value="income" {% if request.GET.type == 'income' %}selected{% endif %}>Income</option>
+        <option value="expense" {% if request.GET.type == 'expense' %}selected{% endif %}>Expense</option>
+      </select>
+    </div>
+    <div class="col-auto">
+      <button type="submit" class="btn btn-secondary">Filter</button>
+    </div>
+  </div>
+</form>
+
+<!-- Transactions Table -->
+<h4>Your Transactions</h4>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Type</th>
+      <th>Source / Category</th>
+      <th>Amount</th>
+      <th>Notes</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for income in incomes %}
+    <tr class="text-success">
+      <td>{{ income.date|date:"Y-m-d" }}</td>
+      <td>Income</td>
+      <td>{{ income.source }}</td>
+      <td>${{ income.amount }}</td>
+      <td>{{ income.notes|default:"-" }}</td>
+      <td></td>
+    </tr>
+    {% endfor %}
+    {% for expense in expenses %}
+    <tr class="text-danger">
+      <td>{{ expense.date|date:"Y-m-d" }}</td>
+      <td>Expense</td>
+      <td>{{ expense.category }}</td>
+      <td>${{ expense.amount }}</td>
+      <td>{{ expense.description|default:"-" }}</td>
+      <td>
+        <a href="{% url 'edit_expense' expense.id %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+        <a href="{% url 'delete_expense' expense.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const selectedMonth = "{{ request.GET.month|default:now|date:'F' }}";
+  const textColor = getComputedStyle(document.body).color || '#000';
+
+  // Expenses by Category Chart
+  fetch(/finance/chart_data?month=${selectedMonth})
+    .then(response => response.json())
+    .then(data => {
+      const labels = Object.keys(data);
+      const values = Object.values(data);
+      const backgroundColors = labels.map((_, i) => hsl(${i * 60}, 70%, 60%));
+
+      const ctx = document.getElementById('categoryChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Expenses by Category',
+            data: values,
+            backgroundColor: backgroundColors,
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                color: textColor
+              }
+            },
+            title: {
+              display: true,
+              text: 'Expenses by Category',
+              color: textColor
+            }
+          }
+        }
+      });
+    });
+
+  // Income vs Expense Bar Chart
+  const monthlyData = JSON.parse('{{ monthly_data|safe|escapejs }}');
+  const labels = monthlyData.map(item => item.month);
+  const incomeData = monthlyData.map(item => item.income);
+  const expenseData = monthlyData.map(item => item.expense);
+
+  const ctxBar = document.getElementById('incomeExpenseChart').getContext('2d');
+  new Chart(ctxBar, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Income',
+          data: incomeData,
+          backgroundColor: 'rgba(54, 162, 235, 0.7)'
+        },
+        {
+          label: 'Expense',
+          data: expenseData,
+          backgroundColor: 'rgba(255, 99, 132, 0.7)'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: {
+            color: textColor
+          }
+        },
+        title: {
+          display: true,
+          text: 'Monthly Income vs Expense',
+          color: textColor
+        }
+      }
+    }
+  });
+});
+</script>
+{% endblock %}
