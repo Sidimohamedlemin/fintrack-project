@@ -12,7 +12,6 @@ urlpatterns = [
     path('users/', include('users.urls')),  
     path('', dashboard, name='home'),
     path('about/', TemplateView.as_view(template_name="about.html"), name='about'),
-    path('contact/', TemplateView.as_view(template_name='contact.html'), name='contact'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

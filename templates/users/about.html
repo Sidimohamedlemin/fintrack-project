@@ -1,0 +1,43 @@
+{% extends "users/base.html" %}
+
+{% block title %}About | FinTrack+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-lg border-0 rounded-4">
+    <div class="card-body p-5">
+      <h1 class="mb-4 text-primary fw-bold">About FinTrack+</h1>
+      <p class="lead">
+        <strong>FinTrack+</strong> is a smart personal finance management web application designed to help individuals take control of their financial lives. Built with Django and modern web technologies, FinTrack+ makes it simple and intuitive to:
+      </p>
+      <ul class="list-group list-group-flush mb-4">
+        <li class="list-group-item">💸 Track your income and expenses effortlessly</li>
+        <li class="list-group-item">📊 Visualize your monthly budgets through charts</li>
+        <li class="list-group-item">📅 Manage recurring transactions automatically</li>
+        <li class="list-group-item">🔔 Receive alerts when your spending exceeds set limits</li>
+        <li class="list-group-item">🧾 Export financial summaries in PDF or CSV format</li>
+      </ul>
+
+      <h4 class="text-secondary fw-bold mt-4">Why FinTrack+?</h4>
+      <p>
+        Whether you're a student, professional, or business owner, FinTrack+ empowers you to make better financial decisions. Our mission is to promote financial literacy and budgeting habits through an easy-to-use, responsive platform available from any device.
+      </p>
+
+      <h5 class="text-success fw-bold mt-4">Technologies Used</h5>
+      <p>
+        FinTrack+ is built using:
+        <ul>
+          <li>Django 5 (Backend)</li>
+          <li>HTML5, Bootstrap 5 RTL (Frontend)</li>
+          <li>Django Allauth (Authentication & Email Verification)</li>
+          <li>Cloudinary (Image Hosting), PostgreSQL (Database)</li>
+        </ul>
+      </p>
+
+      <p class="mt-5 text-muted">
+        This project was developed with ❤️ by <strong>Sidimohamedlemin</strong> as part of a full-stack web development initiative.
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}
