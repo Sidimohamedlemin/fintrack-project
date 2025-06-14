@@ -1,4 +1,4 @@
-ECHO is on.
+
 ![Banner](static/images/banner.jpeg)
 
 # FinTrack+ - Smart Personal Finance Manager
@@ -22,9 +22,7 @@ The FinTrack+ project is a comprehensive personal finance management web applica
 - 🔒 Protected checkout and dashboard routes
 
 ---
-![FinTrack+](https://img.shields.io/badge/FinTrack+-Finance%20Manager-blueviolet?style=for-the-badge&logo=python&logoColor=white)
 
-<img src="https://user-images.githubusercontent.com/Sidimohamedlemin/banner.png" alt="FinTrack+ Banner" width="100%" />
 ## 🛠 Technologies Used
 
 - **Backend**: Django 5, PostgreSQL
