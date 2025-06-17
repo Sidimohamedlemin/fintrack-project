@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
@@ -193,12 +192,3 @@ LOGGING = {
         },
     },
 }
-
-
-
-
-if os.environ.get("RENDER"):
-    import django
-    django.setup()
-    from django.core.management import call_command
-    call_command("migrate")

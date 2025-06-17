@@ -18,11 +18,9 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # ===================== SECRET & DEBUG =====================
 SECRET_KEY = os.environ.get('SECRET_KEY', 'TEBGALI@49360602')
 DEBUG =  DEBUG = os.environ.get('DEBUG', 'False') == 'True'
-ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 # ===================== DATABASE =====================
-DEBUG = os.environ.get("DEBUG", "True") == "True"
-
 if DEBUG:
     DATABASES = {
         'default': {
@@ -33,7 +31,7 @@ if DEBUG:
 else:
     DATABASES = {
         'default': dj_database_url.config(
-            default=os.getenv("DATABASE_URL"),
+            default=os.getenv('DATABASE_URL'),
             conn_max_age=600,
             ssl_require=True
         )
@@ -45,7 +43,6 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
@@ -81,9 +78,7 @@ ACCOUNT_RATE_LIMITS = {
 
 LOGIN_URL = 'account_login'
 LOGIN_REDIRECT_URL = '/finance/dashboard/' 
-LOGOUT_REDIRECT_URL = '/'
-ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/accounts/login/'
-ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/finance/dashboard/'
+LOGOUT_REDIRECT_URL = 'account_login'
 
 # ===================== EMAIL (Gmail SMTP) =====================
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -168,6 +163,9 @@ SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 
 
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+
 
 # ===================== LOGGING =====================
 LOGGING = {
@@ -193,12 +191,3 @@ LOGGING = {
         },
     },
 }
-
-
-
-
-if os.environ.get("RENDER"):
-    import django
-    django.setup()
-    from django.core.management import call_command
-    call_command("migrate")

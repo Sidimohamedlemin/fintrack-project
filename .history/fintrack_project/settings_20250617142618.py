@@ -33,7 +33,7 @@ if DEBUG:
 else:
     DATABASES = {
         'default': dj_database_url.config(
-            default=os.getenv("DATABASE_URL"),
+            default=os.getenv('DATABASE_URL'),
             conn_max_age=600,
             ssl_require=True
         )
@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
@@ -193,12 +192,3 @@ LOGGING = {
         },
     },
 }
-
-
-
-
-if os.environ.get("RENDER"):
-    import django
-    django.setup()
-    from django.core.management import call_command
-    call_command("migrate")
