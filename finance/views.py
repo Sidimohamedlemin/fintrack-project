@@ -12,7 +12,9 @@ from django.template.loader import get_template
 from xhtml2pdf import pisa
 import io
 import pandas as pd
+import logging
 
+logger = logging.getLogger(__name__)
 
 @login_required
 def dashboard(request):

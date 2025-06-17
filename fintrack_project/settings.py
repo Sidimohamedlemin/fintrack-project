@@ -17,10 +17,12 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # ===================== SECRET & DEBUG =====================
 SECRET_KEY = os.environ.get('SECRET_KEY', 'TEBGALI@49360602')
-DEBUG =  'True'
-ALLOWED_HOSTS = ['*']
+DEBUG =  DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1']
 
 # ===================== DATABASE =====================
+DEBUG = os.environ.get("DEBUG", "True") == "True"
+
 if DEBUG:
     DATABASES = {
         'default': {
@@ -31,7 +33,7 @@ if DEBUG:
 else:
     DATABASES = {
         'default': dj_database_url.config(
-            default=os.getenv('DATABASE_URL'),
+            default=os.getenv("DATABASE_URL"),
             conn_max_age=600,
             ssl_require=True
         )
@@ -78,7 +80,9 @@ ACCOUNT_RATE_LIMITS = {
 
 LOGIN_URL = 'account_login'
 LOGIN_REDIRECT_URL = '/finance/dashboard/' 
-LOGOUT_REDIRECT_URL = 'account_login'
+LOGOUT_REDIRECT_URL = '/'
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/accounts/login/'
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/finance/dashboard/'
 
 # ===================== EMAIL (Gmail SMTP) =====================
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -146,3 +150,54 @@ if DEBUG:
     CSRF_COOKIE_SECURE = False
     SESSION_COOKIE_SECURE = False
     CSRF_TRUSTED_ORIGINS = []
+
+# ===================== CACHES =====================
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": os.environ.get("REDIS_URL"),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "IGNORE_EXCEPTIONS": True,
+        }
+    }
+}
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+
+
+
+# ===================== LOGGING =====================
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs/fintrack.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'finance': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
+
+
+
+if os.environ.get("RENDER"):
+    import django
+    django.setup()
+    from django.core.management import call_command
+    call_command("migrate")
