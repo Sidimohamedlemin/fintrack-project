@@ -195,3 +195,8 @@ LOGGING = {
 
 
 
+if os.environ.get("RENDER"):
+    import django
+    django.setup()
+    from django.core.management import call_command
+    call_command("migrate")

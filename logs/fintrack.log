@@ -62,3 +62,8 @@ Watching for file changes with StatReloader
 "GET /finance/add_income/ HTTP/1.1" 302 0
 "GET /accounts/login/?next=/finance/add_income/ HTTP/1.1" 200 1799
 "GET /accounts/confirm-email/Mg:1uRd0T:zMMunV3E9QlHirvz8of8i2HXyWAFAFYHH7fxlKN656M/ HTTP/1.1" 200 1346
+C:\Users\DELL GOOD ONE\Final_Project\fintrack_project\settings.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\DELL GOOD ONE\Final_Project\fintrack_project\settings.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
