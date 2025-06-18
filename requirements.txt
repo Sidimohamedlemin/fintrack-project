@@ -20,6 +20,7 @@ django-crispy-forms==2.4
 django-redis==5.4.0
 djangorestframework==3.16.0
 executing==2.2.0
+gunicorn==21.2.0
 html5lib==1.1
 idna==3.10
 ipykernel==6.29.5
