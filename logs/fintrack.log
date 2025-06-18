@@ -93,3 +93,10 @@ C:\Users\DELL GOOD ONE\Final_Project\fintrack_project\settings.py changed, reloa
 Watching for file changes with StatReloader
 C:\Users\DELL GOOD ONE\Final_Project\fintrack_project\settings.py changed, reloading.
 Watching for file changes with StatReloader
+"GET /admin HTTP/1.1" 301 0
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 4173
+C:\Users\DELL GOOD ONE\Final_Project\fintrack_project\settings.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\DELL GOOD ONE\Final_Project\fintrack_project\settings.py changed, reloading.
+Watching for file changes with StatReloader

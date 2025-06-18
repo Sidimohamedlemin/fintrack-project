@@ -17,7 +17,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # ===================== SECRET & DEBUG =====================
 SECRET_KEY = os.environ.get('SECRET_KEY', 'TEBGALI@49360602')
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+DEBUG  = os.environ.get('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1']
 
 # ===================== DATABASE =====================
@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+   
 
     # Local apps
     'users',
@@ -71,13 +72,12 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-ACCOUNT_LOGIN_METHODS = {'username', 'email'}
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-ACCOUNT_RATE_LIMITS = {'login_failed': '5/1h'}
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = "email"                    
+
 
 LOGIN_URL = 'account_login'
-LOGIN_REDIRECT_URL = '/finance/dashboard/'
+LOGIN_REDIRECT_URL = '/finance/dashboard/' 
 LOGOUT_REDIRECT_URL = '/'
 ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/accounts/login/'
 ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/finance/dashboard/'
@@ -94,7 +94,7 @@ DEFAULT_FROM_EMAIL = f'FinTrack+ <{EMAIL_HOST_USER}>'
 # ===================== MIDDLEWARE =====================
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # REQUIRED for static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -113,7 +113,7 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
-                'django.template.context_processors.request',
+                'django.template.context_processors.request',  # REQUIRED by allauth
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -140,7 +140,6 @@ USE_TZ = True
 # ===================== DEFAULT PRIMARY KEY FIELD TYPE =====================
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# ===================== SECURITY & CSRF =====================
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 CSRF_TRUSTED_ORIGINS = ['https://fintrack-project.onrender.com']
@@ -164,6 +163,8 @@ CACHES = {
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
+
+
 
 # ===================== LOGGING =====================
 LOGGING = {
@@ -189,3 +190,7 @@ LOGGING = {
         },
     },
 }
+
+
+
+
