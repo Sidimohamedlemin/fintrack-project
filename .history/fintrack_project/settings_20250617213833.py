@@ -72,11 +72,9 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-ACCOUNT_LOGIN_METHODS = {'username', 'email'}
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-ACCOUNT_RATE_LIMITS = {'login_failed': '5/1h'
-                       
+ACCOUNT_LOGIN_METHODS = 'email'  # Replace ACCOUNT_AUTHENTICATION_METHOD
+ACCOUNT_SIGNUP_FIELDS = ['email']  # Replace ACCOUNT_EMAIL_REQUIRED
+ACCOUNT_RATE_LIMITS = {'login_failed': '5/1h'         
 }
 
 LOGIN_URL = 'account_login'

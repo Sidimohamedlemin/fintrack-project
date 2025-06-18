@@ -75,7 +75,7 @@ AUTHENTICATION_BACKENDS = [
 ACCOUNT_LOGIN_METHODS = {'username', 'email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-ACCOUNT_RATE_LIMITS = {'login_failed': '5/1h'
+ACCOUNT_RATE_LIMITS = {'login_failed': '5/m',
                        
 }
 
