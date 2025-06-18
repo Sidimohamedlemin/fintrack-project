@@ -56,7 +56,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-   
+    'django.contrib.sites',
 
     # Local apps
     'users',

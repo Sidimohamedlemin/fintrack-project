@@ -4,8 +4,9 @@ import dj_database_url
 from dotenv import load_dotenv
 
 load_dotenv()
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(_file_).resolve().parent.parent
 ROOT_URLCONF = 'fintrack_project.urls'
+WSGI_APPLICATION = 'fintrack_project.wsgi.application'
 
 # ===================== STATIC & MEDIA =====================
 STATIC_URL = '/static/'
@@ -17,12 +18,10 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # ===================== SECRET & DEBUG =====================
 SECRET_KEY = os.environ.get('SECRET_KEY', 'TEBGALI@49360602')
-DEBUG  = os.environ.get('DEBUG', 'False') == 'True'
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1']
 
 # ===================== DATABASE =====================
-DEBUG = os.environ.get("DEBUG", "True") == "True"
-
 if DEBUG:
     DATABASES = {
         'default': {
@@ -41,6 +40,7 @@ else:
 
 # ===================== APPS =====================
 INSTALLED_APPS = [
+    # Django core
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -56,7 +56,6 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-   
 
     # Local apps
     'users',
@@ -75,12 +74,12 @@ AUTHENTICATION_BACKENDS = [
 ACCOUNT_LOGIN_METHODS = {'username', 'email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-ACCOUNT_RATE_LIMITS = {'login_failed': '5/m',
-                       
+ACCOUNT_RATE_LIMITS = {
+    'login_failed': '5/m'
 }
 
 LOGIN_URL = 'account_login'
-LOGIN_REDIRECT_URL = '/finance/dashboard/' 
+LOGIN_REDIRECT_URL = '/finance/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
 ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/accounts/login/'
 ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/finance/dashboard/'
@@ -97,7 +96,7 @@ DEFAULT_FROM_EMAIL = f'FinTrack+ <{EMAIL_HOST_USER}>'
 # ===================== MIDDLEWARE =====================
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # REQUIRED for static files
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -116,15 +115,13 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
-                'django.template.context_processors.request',  # REQUIRED by allauth
+                'django.template.context_processors.request',  # required by allauth
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
         },
     },
 ]
-
-WSGI_APPLICATION = 'fintrack_project.wsgi.application'
 
 # ===================== PASSWORD VALIDATORS =====================
 AUTH_PASSWORD_VALIDATORS = [
@@ -143,31 +140,24 @@ USE_TZ = True
 # ===================== DEFAULT PRIMARY KEY FIELD TYPE =====================
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-CSRF_TRUSTED_ORIGINS = ['https://fintrack-project.onrender.com']
+# ===================== SECURITY =====================
+CSRF_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_TRUSTED_ORIGINS = ['https://fintrack-project.onrender.com'] if not DEBUG else []
 
-if DEBUG:
-    CSRF_COOKIE_SECURE = False
-    SESSION_COOKIE_SECURE = False
-    CSRF_TRUSTED_ORIGINS = []
-
-# ===================== CACHES =====================
+# ===================== REDIS CACHES =====================
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": os.environ.get("REDIS_URL"),
+        "LOCATION": os.environ.get("REDIS_URL", "redis://localhost:6379/1"),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "IGNORE_EXCEPTIONS": True,
         }
     }
 }
-
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
-
-
 
 # ===================== LOGGING =====================
 LOGGING = {
@@ -194,6 +184,9 @@ LOGGING = {
     },
 }
 
-
-
-
+# ===================== MIGRATE ON RENDER =====================
+if os.environ.get("RENDER"):
+    import django
+    django.setup()
+    from django.core.management import call_command
+    call_command("migrate")

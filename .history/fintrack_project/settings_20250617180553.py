@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',
 
     # Third-party
     'rest_framework',
@@ -56,7 +55,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-   
+    'django.contrib.sites',
 
     # Local apps
     'users',
@@ -82,8 +81,7 @@ ACCOUNT_RATE_LIMITS = {'login_failed': '5/m',
 LOGIN_URL = 'account_login'
 LOGIN_REDIRECT_URL = '/finance/dashboard/' 
 LOGOUT_REDIRECT_URL = '/'
-ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/accounts/login/'
-ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/finance/dashboard/'
+
 
 # ===================== EMAIL (Gmail SMTP) =====================
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
